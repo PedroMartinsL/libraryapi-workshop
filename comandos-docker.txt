@@ -1,0 +1,5 @@
+#Rodar container postgres na v16.3
+docker run --name librarydb -e POSTGRES_PASSWORD=prostgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library -p 5432:5432 postgres:16.3
+
+#Rodar Pgadmin 4
+docker run --name pgadmin4 -p 15432:80 -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin dpage/pgadmin4
