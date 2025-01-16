@@ -1,5 +1,7 @@
 package io.github.pedromartinsl.libraryapi.controller;
 
+import java.net.URI;
+
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -10,30 +12,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.github.pedromartinsl.libraryapi.controller.common.mappers.LivroMapper;
 import io.github.pedromartinsl.libraryapi.controller.dto.CadastroLivroDTO;
-import io.github.pedromartinsl.libraryapi.controller.dto.ErroResposta;
-import io.github.pedromartinsl.libraryapi.exceptions.RegistroDuplicadoException;
 import io.github.pedromartinsl.libraryapi.model.Livro;
 import io.github.pedromartinsl.libraryapi.service.LivroService;
 import lombok.RequiredArgsConstructor;
 
-
 @RestController
 @RequestMapping("livros")
 @RequiredArgsConstructor
-public class LivroController {
+public class LivroController implements GenericController {
 
     private final LivroService service;
     private final LivroMapper mapper;
 
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody @Valid CadastroLivroDTO dto) {
-        try {
-            Livro livro = mapper.toEntity(dto);
-            service.salvar(livro);
-            return ResponseEntity.ok(livro);
-        } catch (RegistroDuplicadoException e) {
-            var erroDTO = ErroResposta.confito(e.getMessage());
-            return ResponseEntity.status(erroDTO.status()).body(erroDTO);
-        }
+    public ResponseEntity<Void> salvar(@RequestBody @Valid CadastroLivroDTO dto) {
+        Livro livro = mapper.toEntity(dto);
+        service.salvar(livro);
+
+        URI url = gerarHeaderLocation(livro.getId());
+
+        return ResponseEntity.created(url).build();
     }
 }
