@@ -8,8 +8,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
-import io.github.pedromartinsl.libraryapi.model.Autor;
-
 public record AutorDTO(
         UUID id,
         @NotBlank(message = "campo obrigatório")
@@ -22,13 +20,4 @@ public record AutorDTO(
         @Size(min = 2, max = 50, message = "Campo fora do tamanho padrão")
         String nacionalidade) {
     //anotações tratadas no handler - fe.getField(), fe.getDefaultMessage()
-
-    public Autor mapearParaAutor() {
-        Autor autor = new Autor();
-        autor.setNome(this.nome);
-        autor.setDataNascimento(this.dataNascimento);
-        autor.setNacionalidade(this.nacionalidade);
-
-        return autor;
-    }
 }
