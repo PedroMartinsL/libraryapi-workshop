@@ -2,6 +2,7 @@ package io.github.pedromartinsl.libraryapi.repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +16,8 @@ public interface LivroRepository extends JpaRepository<Livro,UUID>, JpaSpecifica
     List<Livro> findByAutor(Autor autor);
 
     List<Livro> findByTitulo(String titulo);
+
+    Optional<Livro> findByIsbn(String isbn);
 
     List<Livro> findByTituloAndPreco(String titulo, BigDecimal preco);
 
