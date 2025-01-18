@@ -57,5 +57,5 @@ public class Autor {
     private LocalDateTime dataAtualizacao;
     
     @Column(name = "id_usuario")
-    private UUID idUsuario;
+    private UUID usuario;
 }

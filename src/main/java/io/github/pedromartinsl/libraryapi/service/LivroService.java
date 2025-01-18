@@ -1,9 +1,17 @@
 package io.github.pedromartinsl.libraryapi.service;
 
-import java.util.List;
+import static io.github.pedromartinsl.libraryapi.repository.specs.LivroSpecs.anoPublicacaoEqual;
+import static io.github.pedromartinsl.libraryapi.repository.specs.LivroSpecs.generoEqual;
+import static io.github.pedromartinsl.libraryapi.repository.specs.LivroSpecs.isbnEqual;
+import static io.github.pedromartinsl.libraryapi.repository.specs.LivroSpecs.nomeAutorLike;
+import static io.github.pedromartinsl.libraryapi.repository.specs.LivroSpecs.tituloLike;
+
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +20,6 @@ import io.github.pedromartinsl.libraryapi.model.Livro;
 import io.github.pedromartinsl.libraryapi.repository.LivroRepository;
 import io.github.pedromartinsl.libraryapi.validor.LivroValidator;
 import lombok.RequiredArgsConstructor;
-
-import static io.github.pedromartinsl.libraryapi.repository.specs.LivroSpecs.*;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +41,14 @@ public class LivroService {
         repository.delete(livro);
     }
 
-    public List<Livro> pesquisa(String isbn, String titulo, String nomeAutor, GeneroLivro genero, Integer anoPublicacao) {
+    public Page<Livro> pesquisa(
+        String isbn, 
+        String titulo, 
+        String nomeAutor, 
+        GeneroLivro genero, 
+        Integer anoPublicacao,
+        Integer pagina,
+        Integer tamanhoPagina) {
         //pode ser substituido pelo Example
 
         //Retornando todos os elementos passados em where 0=0 > onde for verdadeiro pelo param
@@ -62,8 +75,9 @@ public class LivroService {
             specs = specs.and(nomeAutorLike(nomeAutor));
         }
 
+        Pageable pageRequest = PageRequest.of(pagina, tamanhoPagina);
 
-        return repository.findAll(isbnEqual(isbn));
+        return repository.findAll(specs, pageRequest);
     }
 
     public void atualizar(Livro livro) {
