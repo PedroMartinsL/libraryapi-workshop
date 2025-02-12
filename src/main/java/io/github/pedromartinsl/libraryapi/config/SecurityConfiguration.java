@@ -26,7 +26,13 @@ public class SecurityConfiguration {
                     configurer.loginPage("/login").permitAll();
                 })// formulário padrão
                 .httpBasic(Customizer.withDefaults())// através do postman, fiormulário de login ou outras aplicações
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated()) // a req precisa estar autenticada
+                .authorizeHttpRequests(authorize -> {
+                    authorize.requestMatchers("/login/**").permitAll();
+                    authorize.requestMatchers("/autores/**").hasRole("ADMIN");
+                    authorize.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN");
+                    authorize.anyRequest().authenticated(); // a req precisa estar autenticada
+                    //regras abaixo não serão atendidas
+                }) 
                 .build();
     }
 
