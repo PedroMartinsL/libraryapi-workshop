@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 
 import io.github.pedromartinsl.libraryapi.model.GeneroLivro;
 import io.github.pedromartinsl.libraryapi.model.Livro;
+import io.github.pedromartinsl.libraryapi.model.Usuario;
 import io.github.pedromartinsl.libraryapi.repository.LivroRepository;
+import io.github.pedromartinsl.libraryapi.security.SecurityService;
 import io.github.pedromartinsl.libraryapi.validor.LivroValidator;
 import lombok.RequiredArgsConstructor;
 
@@ -27,9 +29,12 @@ public class LivroService {
 
     private final LivroRepository repository;
     private final LivroValidator validator;
+    private final SecurityService securityService;
 
     public Livro salvar(Livro livro) {
         validator.validar(livro);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        livro.setUsuario(usuario);
         return repository.save(livro);
     }
 

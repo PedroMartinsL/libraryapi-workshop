@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 
 import io.github.pedromartinsl.libraryapi.exceptions.OperacaoNegadaException;
 import io.github.pedromartinsl.libraryapi.model.Autor;
+import io.github.pedromartinsl.libraryapi.model.Usuario;
 import io.github.pedromartinsl.libraryapi.repository.AutorRepository;
 import io.github.pedromartinsl.libraryapi.repository.LivroRepository;
+import io.github.pedromartinsl.libraryapi.security.SecurityService;
 import io.github.pedromartinsl.libraryapi.validor.AutorValidator;
 import lombok.RequiredArgsConstructor;
 
@@ -23,9 +25,12 @@ public class AutorService {
     private final AutorRepository repository;
     private final AutorValidator validator;
     private final LivroRepository livroRepository;
+    private final SecurityService securityService;
 
     public Autor salvar(Autor autor) {
         validator.validar(autor);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        autor.setUsuario(usuario);
         return repository.save(autor);
     }
 

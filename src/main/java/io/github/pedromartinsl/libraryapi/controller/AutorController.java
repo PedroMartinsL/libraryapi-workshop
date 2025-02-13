@@ -39,9 +39,7 @@ public class AutorController implements GenericController {
     public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto) {
         Autor autor = mapper.toEntity(dto);
         service.salvar(autor);
-
         URI location = gerarHeaderLocation(autor.getId());
-
         return ResponseEntity.created(location).build();
     }
 
