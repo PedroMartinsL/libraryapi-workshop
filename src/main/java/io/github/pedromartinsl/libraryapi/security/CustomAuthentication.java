@@ -25,7 +25,7 @@ public class CustomAuthentication implements Authentication {
     @Override
     public Collection<GrantedAuthority> getAuthorities() {
         // TODO Auto-generated method stub
-        return this.usuario.getRoles().stream().map(role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList());
+        return this.usuario.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override
