@@ -1,5 +1,7 @@
 package io.github.pedromartinsl.libraryapi.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +24,7 @@ public class UsuarioController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void salvar(@RequestBody UsuarioDTO dto) {
+    public void salvar(@RequestBody @Valid UsuarioDTO dto) {
         var usuario = mapper.toEntity(dto);
         service.salvar(usuario);
     }

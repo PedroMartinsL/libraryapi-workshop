@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import io.github.pedromartinsl.libraryapi.security.CustomUserDetailsService;
+import io.github.pedromartinsl.libraryapi.security.LoginSocialSuccessHandler;
 import io.github.pedromartinsl.libraryapi.service.UsuarioService;
 
 @Configuration
@@ -23,7 +24,7 @@ import io.github.pedromartinsl.libraryapi.service.UsuarioService;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, LoginSocialSuccessHandler successHandler) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)//proteção para as pag html, pra fazer req de forma autenticada, precisa de um token csrf no backend - desabilitar para conseguir fazer uma requisição através de outras requisições
                 .formLogin(Customizer.withDefaults())// formulário padrão
@@ -35,7 +36,11 @@ public class SecurityConfiguration {
                     authorize.anyRequest().authenticated(); // a req precisa estar autenticada
                     //regras abaixo não serão atendidas
                 }) 
-                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(oauth2 -> {
+                    oauth2.successHandler(successHandler);
+                }
+                    
+                )
                 .build();
     }
 
