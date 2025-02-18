@@ -9,14 +9,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import io.github.pedromartinsl.libraryapi.security.CustomUserDetailsService;
 import io.github.pedromartinsl.libraryapi.security.LoginSocialSuccessHandler;
-import io.github.pedromartinsl.libraryapi.service.UsuarioService;
 
 @Configuration
 @EnableWebSecurity
@@ -41,25 +38,26 @@ public class SecurityConfiguration {
                 .oauth2Login(oauth2 -> {
                     oauth2.loginPage("/login");
                     oauth2.successHandler(successHandler);
-                }
-                    
-                )
+                })
+                .oauth2ResourceServer(oauth2RS -> oauth2RS.jwt(Customizer.withDefaults())) //usar o jwt para validar o usuário
                 .build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10); //criptografa e produz um hash,  o10 é indicar quantas vezes passa pelo bcrypt
-    }
-
-    //@Bean
-    public UserDetailsService userDetailsService(UsuarioService usuarioService) {
-        // carregar os detalhes do usuário a partir do banco de dados ou de qualquer outro repositório de usuários durante a autenticação.
-        return new CustomUserDetailsService(usuarioService);
-    }
-
+    //configura o prefixo role
     @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return new GrantedAuthorityDefaults("");
+    }
+
+    //configura no token jwt o prefixo scope
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        var authoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        authoritiesConverter.setAuthorityPrefix(""); //o padrão é SCOPE_
+
+        var converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
+
+        return converter;
     }
 }
