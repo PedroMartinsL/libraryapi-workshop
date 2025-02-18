@@ -22,6 +22,8 @@ import io.github.pedromartinsl.libraryapi.security.LoginSocialSuccessHandler;
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true) //permite autorização pelos controllers
 public class SecurityConfiguration {
 
+    //recebe os tokens
+
     @Bean
     public SecurityFilterChain securityFilterChain(
         HttpSecurity httpSecurity, 
