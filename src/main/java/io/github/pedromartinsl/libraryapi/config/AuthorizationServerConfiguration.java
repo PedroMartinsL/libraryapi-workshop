@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
@@ -114,5 +115,26 @@ public class AuthorizationServerConfiguration {
     @Bean
     public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
+    }
+
+    //definir url
+    @Bean
+    public AuthorizationServerSettings authorizationServerSettings() {
+        return AuthorizationServerSettings.builder()
+        //obter token
+        .tokenEndpoint("/ouath2/token")
+        //pegar as informações de status do token
+        .tokenIntrospectionEndpoint("/oauth/introspect")
+        //revogar o token antes de acabar o tempo de sessão
+        .tokenRevocationEndpoint("/oauth2/revoke")
+        //authorization endpoint encaminha para o formulário de login
+        .authorizationEndpoint("/oauth2/authorize")
+        //informaçoes do usuario OPEN id connect
+        .oidcUserInfoEndpoint("/ouath2/userinfo")
+        // obter a chave pública para verificar a assinatura do token
+        .jwkSetEndpoint("/outh2/jwks")
+        //logout
+        .oidcLogoutEndpoint("/oauth2/logout")
+        .build();
     }
 }
