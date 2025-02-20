@@ -19,6 +19,14 @@ spring:
                     google:
                         client-id: ${GOOGLE_CLIENT_ID}
                         client-secret: ${GOOGLE_CLIENT_SECRET}
+logging:
+    file:
+        name: app.log
+    level:
+        root: warn
+        org:
+            springframework:
+                web: debug
 
 springdoc:
     override-width-generic-response: false
