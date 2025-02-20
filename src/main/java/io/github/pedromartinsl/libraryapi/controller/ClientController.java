@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import io.github.pedromartinsl.libraryapi.model.Client;
 import io.github.pedromartinsl.libraryapi.service.ClientService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("clients")
 @RequiredArgsConstructor
+@Slf4j
 public class ClientController {
 
     private final ClientService service;
@@ -24,6 +26,7 @@ public class ClientController {
     @PreAuthorize("hasRole('GERENTE')")
     public void salvar(@RequestBody Client client) {
         //ideal seria o dto
+        log.info("Registrando novo Client: {} com scope: {}", client.getClientId(), client.getScope());
         service.salvar(client);
     }
 }

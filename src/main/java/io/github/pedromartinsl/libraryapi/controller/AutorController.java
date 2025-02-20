@@ -29,11 +29,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("autores")
 @RequiredArgsConstructor
 @Tag(name = "Autores")
+@Slf4j
 public class AutorController implements GenericController {
 
     private final AutorService service;
@@ -51,6 +53,8 @@ public class AutorController implements GenericController {
         @ApiResponse(responseCode = "409", description = "Autor já cadastrado")
     })
     public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto) {
+        log.info("Cadastrando novo autor: {}", dto.nome());
+
         Autor autor = mapper.toEntity(dto);
         service.salvar(autor);
         URI location = gerarHeaderLocation(autor.getId());
@@ -70,7 +74,7 @@ public class AutorController implements GenericController {
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Void> deletar(@PathVariable String id) {
-
+        log.info("Deletando autor de ID: {} ", id);
         UUID idAutor = UUID.fromString(id);
         Optional<Autor> autorOptional = service.obterPorId(idAutor);
 
