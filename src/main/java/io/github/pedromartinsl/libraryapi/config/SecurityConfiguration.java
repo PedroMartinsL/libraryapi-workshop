@@ -62,7 +62,8 @@ public class SecurityConfiguration {
                 "/swager-resources/**",
                 "/swagger-ui.html",
                 "/swagger-ui/**",
-                "/webjars/**"); // array de urls que deve ignorar no filtro do security
+                "/webjars/**",
+                "/actuator/**"); // array de urls que deve ignorar no filtro do security
     }
 
     // configura o prefixo role
