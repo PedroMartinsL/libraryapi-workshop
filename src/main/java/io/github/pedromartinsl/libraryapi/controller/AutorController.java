@@ -24,11 +24,16 @@ import io.github.pedromartinsl.libraryapi.controller.common.mappers.AutorMapper;
 import io.github.pedromartinsl.libraryapi.controller.dto.AutorDTO;
 import io.github.pedromartinsl.libraryapi.model.Autor;
 import io.github.pedromartinsl.libraryapi.service.AutorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("autores")
 @RequiredArgsConstructor
+@Tag(name = "Autores")
 public class AutorController implements GenericController {
 
     private final AutorService service;
@@ -36,6 +41,15 @@ public class AutorController implements GenericController {
 
     @PostMapping
     @PreAuthorize("hasRole('GERENTE')")
+    @Operation(
+        summary = "Salvar",
+        description = "Cadastrar novo autor"
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Cadastrado com sucesso"),
+        @ApiResponse(responseCode = "422", description = "Erro de validação"),
+        @ApiResponse(responseCode = "409", description = "Autor já cadastrado")
+    })
     public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto) {
         Autor autor = mapper.toEntity(dto);
         service.salvar(autor);
