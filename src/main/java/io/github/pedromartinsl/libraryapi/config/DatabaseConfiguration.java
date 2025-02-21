@@ -9,7 +9,10 @@ import org.springframework.context.annotation.Configuration;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Configuration
+@Slf4j
 public class DatabaseConfiguration {
     
     @Value("${spring.datasource.url}")
@@ -35,6 +38,8 @@ public class DatabaseConfiguration {
 
     @Bean
     public DataSource hikariDataSource() {
+
+        log.info("Iniciando conexão com o banco  na URL: {}", url);
 
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(url);
